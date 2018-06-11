@@ -500,11 +500,9 @@ std::string SHA256AutoDetect()
     uint32_t eax, ebx, ecx, edx;
     cpuid(1, 0, eax, ebx, ecx, edx);
     if ((ecx >> 19) & 1) {
-#if defined(__x86_64__) || defined(__amd64__)
-        Transform = sha256_sse4::Transform;
-        TransformD64 = TransformD64Wrapper<sha256_sse4::Transform>;
-#endif
 #if defined(ENABLE_SSE41) && !defined(BUILD_BITCOIN_INTERNAL)
+        Transform = sha256_sse41::Transform;
+        TransformD64 = TransformD64Wrapper<sha256_sse41::Transform>;
         TransformD64_4way = sha256d64_sse41::Transform_4way;
         ret = "sse4(1way+4way)";
 #if defined(ENABLE_AVX2) && !defined(BUILD_BITCOIN_INTERNAL)
